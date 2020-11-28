@@ -1,0 +1,124 @@
+﻿@model NetC.JuniorDeveloperExam.Web.Models.CommentModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Considerations for a Content-First Design Approach - NetConstruct Blog</title>
+    <link rel="stylesheet" type="text/css" href="/Assets/Styles/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Assets/Styles/custom.css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">NetConstruct Blog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">
+                            Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    @foreach (var blog in ViewBag.Model)
+    {
+        <div class="container">
+            <div class="row">
+
+                <!-- Blog post content -->
+                <div class="col-lg-12">
+
+                    <!-- Title -->
+                    <h1 class="mt-4">@(blog.Title)</h1>
+
+                    <hr>
+
+                    <!-- Date/Time -->
+                    <p>@(blog.Date)</p>
+
+                    <hr>
+
+                    <!-- Preview Image -->
+                    <img class="img-fluid rounded" src="@(blog.Image)" alt="@(blog.Title)">
+
+                    <hr>
+
+                    <!-- Post Content -->
+                    @Html.Raw(blog.HtmlContent)
+                    <hr>
+
+                    @using (Html.BeginForm("Index", "BlogPosts", FormMethod.Post))//, new { Name = "Name", EmailAddress = "EmailAddress", Comment = "Comment" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <!--Blog post comment form-->
+                        <div class="card my-4">
+                            <h5 class="card-header">Leave a Comment:</h5>
+                            @Html.HiddenFor(Model => Model.BlogId, new { @Value = blog.Id })
+
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            @Html.LabelFor(Model => Model.Name)
+                                            @Html.EditorFor(Model => Model.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Name" }, })
+                                            @Html.ValidationMessageFor(Model => Model.Name, "", new { @class = "text-danger" })
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            @Html.LabelFor(model => model.EmailAddress)
+                                            @Html.EditorFor(model => model.EmailAddress, new { htmlAttributes = new { @class = "form-control", @placeHolder = "Email Address" } })
+                                            @Html.ValidationMessageFor(model => model.EmailAddress, "", new { @class = "text-danger", Type = "email" })
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Comment)
+                                        @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", @placeHolder = "Please Leave Your Comment here ...", @rows = 3 } })
+                                        @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    @if (blog.Comments != null)
+                    {
+                        foreach (var comment in blog.Comments)
+                        {
+                            <!-- Blog post comments -->
+                            var imageSrc = "https://eu.ui-avatars.com/api/?name=" + comment.Name;
+                            <div class="media mb-4">
+                                <img class="d-flex mr-3 rounded-circle user-avatar" src=@(imageSrc) alt="@(comment.Name)">
+                                <div class="media-body">
+                                    <h5 class="mt-0">@(comment.Name) <small><em>"@(comment.Date)"</em></small></h5>
+                                    "@(comment.Message)"
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <script src="/Assets/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="/Assets/Scripts/jquery.validate.min.js"></script>
+    <script src="/Assets/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Assets/Scripts/unobtrusive-bootstrap.js"></script>
+    <script src="/Assets/Scripts/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
