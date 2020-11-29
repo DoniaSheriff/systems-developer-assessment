@@ -8,16 +8,18 @@ namespace NetC.JuniorDeveloperExam.Web
 {
     public class MvcApplication : HttpApplication
     {
-        private readonly IBlogPosts blogPosts;
-        public MvcApplication()
-        {
-            this.blogPosts = new BlogPostsService();
-        }
+        //private readonly IBlogPosts blogPosts;
+        //public MvcApplication()
+        //{
+        //    this.blogPosts = new BlogPostsService();
+        //}
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            UnityConfig.RegisterComponents();                           // <----- Add this line
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            //BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }
 }

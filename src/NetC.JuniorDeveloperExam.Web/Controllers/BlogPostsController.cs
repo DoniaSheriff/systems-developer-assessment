@@ -6,21 +6,21 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
 {
     public class BlogPostsController : Controller
     {
-        private readonly IBlogPosts BlogPostsService;
-        public BlogPostsController()
+        private readonly IBlogPosts _blogPostsService;
+        public BlogPostsController(BlogPostsService blogPostsService)
         {
-            this.BlogPostsService = new BlogPostsService();
+            this._blogPostsService = blogPostsService;
         }
 
         public ActionResult Index()
         {
 
-            ViewBag.Model = BlogPostsService.GetBlogs();
+            ViewBag.Model = _blogPostsService.GetBlogs();
             return View();
         }
         public ActionResult GetBlogPosts(int? id)
         {
-            var model = BlogPostsService.GetBlog(id);
+            var model = _blogPostsService.GetBlog(id);
             if (model != null) ViewBag.Model = model;
             else
                 return RedirectToAction("Index");
@@ -30,7 +30,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         [HttpPost]
         public ActionResult Index(CommentModel commentModel)
         {
-            if (BlogPostsService.AddComment(commentModel))
+            if (_blogPostsService.AddComment(commentModel))
                 return RedirectToAction("GetBlogPosts", new { id = commentModel.BlogId });
             else return View();
         }
