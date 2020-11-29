@@ -6,7 +6,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
 {
     public class BlogPostsController : Controller
     {
-        private readonly IBlogPosts _blogPostsService;
+        private readonly BlogPostsService _blogPostsService;
         public BlogPostsController(BlogPostsService blogPostsService)
         {
             this._blogPostsService = blogPostsService;
